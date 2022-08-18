@@ -1,0 +1,245 @@
+.mpi-title {
+    width: 100%;
+    margin: 50px 0px;
+    font-size: 30px;
+    text-align: center;
+    font-family: 'Lato', sans-serif !important;
+    font-weight: bold;
+}
+
+.mpi-form-container {
+    display: flex;
+    justify-content: center;
+}
+
+.mpi-form {
+    width: 540px;
+}
+
+.mpi-form label {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.mpi-form .mpi-name input,
+.mpi-date input {
+    width: 100%;
+    height: 50px;
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 20px;
+    font-weight: 400;
+    padding-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #c4c4c4;
+    border-radius: 8px;
+    box-shadow: 0 5px 5px rgb(0 0 0 / 26%);
+}
+
+.mpi-date {
+    flex-grow: 1;
+    display: flex;
+    gap: 10px;
+}
+
+.mpi-date .date-start {
+    flex: 50%;
+}
+
+.mpi-date .date-end {
+    flex: 50%;
+}
+.mpi-desc textarea {
+    width: 100%;
+    font-size: 20px;
+    font-weight: 400;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border: 1px solid white;
+    box-sizing: border-box;
+    border-radius: 8px;
+    height: 200px;
+    background-color:white;
+}
+
+.mpi-check {
+    display: flex;
+    gap: 120px;
+    margin: 20px 0px;
+}
+
+.mpi-check label {
+    font-size: 20px;
+}
+
+.check-left {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.check-right {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.check-label {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    color: #514a4a;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.check-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 5px 5px rgb(0 0 0 / 26%);
+}
+
+.check-label:hover input~.checkmark {
+    background-color: #ccc;
+}
+
+.check-label input:checked~.checkmark {
+    background-color: #2196F3;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.check-label input:checked~.checkmark:after {
+    display: block;
+}
+
+.check-label .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.mpi-image {
+    overflow: hidden;
+    height: 50px;
+    width: 100%;
+    font-size: 20px;
+    font-weight: 400;
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    background: #f4f3f3;
+    border: 1px solid #c4c4c4;
+    border-radius: 8px;
+    cursor: pointer;
+    padding-right: 8px;
+    box-shadow: 0 10px 10px rgb(0 0 0 / 26%);
+}
+
+.mpi-image label {
+    width: 100%;
+    height: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mpi-choose {
+    margin-top: -2px;
+    border-radius: 8px;
+    align-items: center;
+    padding: 13px 10px 13px 10px;
+    background-color: #e4e4e4;
+    color: #b2abab;
+}
+
+.mpi-attach {
+    padding-right: 10px;
+}
+
+.mpi-submit button {
+    margin-top: 30px;
+    float: right;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 25px;
+    background-color: var(--btn);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 110px;
+}
+
+.mpi-submit button:hover {
+    background-color: var(--btn-hover)
+}
+
+.mp-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 20px 100px;
+    padding: 0px 70px 0px 70px;
+    margin-left: 80px;
+}
+
+.mp-card {
+    width: 320px;
+    height: 540px;
+    max-width: 280px;
+    max-height: 500px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    margin-bottom : 30px
+}
+
+.mpc-img img {
+    border-radius: 10px;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+
+.mpc-content {
+    height: 63px;
+    overflow: hidden;
+    margin: 20px 0px 20px 0px;
+    text-align: justify;
+    word-wrap: break-word;
+    text-align: justify;
+}

@@ -1,0 +1,40 @@
+body{
+    background-color: rgb(202, 209, 209)    !important;
+    }
+    
+.container {
+    background-color: white;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    margin:50px 50px;
+    border-radius: 15px;
+    }
+    
+    .container2 {
+        margin:100px 100px;
+        height: 93vh;
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        border-radius: 5px;
+    }
+    
+
+    /* ==== Main Page ==== */
+.wrapper {
+    width: 90%;
+    display: flex;
+}
+
+.wrapper .left-side {
+    border-style: solid;
+    flex: 40%;
+    border-color: gray;
+}
+
+.wrapper .right-side {
+    flex: 60%;
+    padding-right: 40px;
+    text-align: justify;
+}
+
+/* ==== Akhir Main Page ==== */

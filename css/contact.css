@@ -1,0 +1,47 @@
+/* ==== Form Contact Me ==== */
+.form-contact-me {
+    width: 400px
+}
+
+.form-contact-me h1{
+    text-align:center;
+    margin-bottom: 30px;
+}
+
+.form-contact-me div {
+    margin-bottom: 20px;
+}
+
+.form-contact-me div label {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.form-contact-me div input,select, textarea {
+    width: 100%;
+    margin-top: 5px;
+    background-color: white;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: gray;
+    padding: 10px;
+    resize: none;
+}
+
+.form-contact-me button {
+    background-color: rgb(26, 26, 27);
+    color: white;
+    font-size: 16px;
+    padding: 3px 20px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-left: 75%;
+}
+
+.form-contact-me button:hover {
+    background-color: rgb(176, 47, 0);
+}
+
+/* ==== Akhir Form Contact Me ==== */
+
