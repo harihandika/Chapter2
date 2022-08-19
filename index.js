@@ -6,14 +6,14 @@ const port = 3000
 
 const isLogin = true
 
+
 app.set('view engine', 'hbs')
 
 app.use('/public', express.static(__dirname + '/public'));
-app.use(express.urlencoded({ extended: false }));  //kasih tau bisa nerima data karena default true
-
+app.use(express.urlencoded({ extended: false })); 
 
 app.get("/", (req, res) => {
-    res.render('index',{ isLogin });
+    res.render('index',{ isLogin: isLogin});
   });
   
   app.get('/project', (req, res) => {
@@ -21,20 +21,22 @@ app.get("/", (req, res) => {
   });
   
   app.post('/project', (req, res) => {
-    console.log(req.body);
-  
-    res.redirect('/');
+    const data = req.body
+    console.log(data); 
+    res.redirect('/')
   });
+  
   
   app.get('/contact', (req, res) => {
     res.render('contact');
   });
   
   app.get('/project-details/:id', (req, res) => {
-    const { id } = req.params
+    const id = req.params.id
     console.log(id)
     res.render('project-details')
   })
+
 
   // app.get("/project-details/:id", function (req, res) {
   //   let id = req.params.id;
