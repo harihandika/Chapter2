@@ -1,0 +1,10 @@
+    let data = dataBlog.map(function(item){
+        return {
+            ...item,
+            isLogin,
+            postAt: getFullTime(item.postAt),
+            duration: getDistanceTime(item.postAt)
+        }
+    })
+ / "item" bebas bisa d ganti abc.. dsb, berfungsi untuk menyimpan parameter
+ / "..." untuk mengeluarkan data

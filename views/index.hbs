@@ -95,39 +95,46 @@
       <div class="mp-container bg-light pt-3">
         <div class="mp-title text-center text-dark my-3">
             <h2 class="fw-bold">MY PROJECT</h2>
+            {{#if isLogin}}
+            <div style="text-align: right; margin-right: 150px; margin-top:50px">
+            <a href="/project" class = "bg-dark rounded-3 m-5 p-2 text-light"style="text-decoration: none">Add Blog</a>
+            </div>
+            {{/if}}
         </div>
-        <div id="contents" class="mp-card-container">
+        <div id="contents" class="mp-card-container my-4">
+          {{#each project}}
             <div class="mp-card">
                 <!--MPC = My Project Card-->
                 <div class="mpc-img">
-                    <img class="card-img-top rounded mx-auto d-block p-2" src="./public/assets/DWB.png" alt="">
+                    <img class="card-img-top rounded mx-auto d-block p-2" src="/public/assets/DWB.png" alt="">
                 </div>
                 <div class="mpc-title">
-                    <a class="text-decoration-none text-dark fw-bold text-center" href="/project-details/6" >
-                        <p class="card-title my-2"> Pelatihan Bootcamp Dumbways 2022 </p>
+                    <a class="text-decoration-none text-dark fw-bold text-center" href="/project-details/{{@index}}" >
+                        <p class="card-title my-2"> {{this.title}} </p>
                     </a>
                 </div>
                 <div class="mpc-duration">
-                    <small>Durasi: 3 Bulan</small>
+                    <small>Durasi:{{this.duration}}</small>
                 </div>
                 <div class="mpc-content fs-8">
-                    DumbWays merupakan Coding Bootcamp GRATIS! Pertama di Indonesia hingga disalurkan kerja. Alumni DumbWays dibekali dengan kemampuan Coding Standard Industri Terkini, hingga siap bersaing di dunia kerja.
+                    {{this.content}}
                 </div>
-                <h6 class="card-subtitle text-muted text-end">1 hour ago</h6>
+                <h6 class="card-subtitle text-muted text-end">{{this.postAt}}</h6>
                 <div class="mpc-icons">
-                    <img class="mpc-icons me-3" src="./public/assets/graphql.svg" />
-                    <img class="mpc-icons me-3" src="./public/assets/nextjs.svg" />
-                    <img class="mpc-icons me-3"src="./public/assets/react.svg"   />
-                    <img src="./public/assets/redux.svg" />
+                    <img src="{{this.checkHtml}}" />
+                    <img src="{{this.checkNode}}" />
+                    <img src="{{this.checkCss}}"/>
+                    <img src="{{this.checkReact}}"/>
                 </div>
                 {{#if isLogin}}
                 <div class="mpc-mod my-3 btn-group d-flex">
-                    <button type="button" class="btn btn-dark me-1">Edit</button>
-                    <button type="button" class="btn btn-dark ms-1">Delete</button>
+                    <a href="/edit-project/{{@index}}" class="btn btn-dark me-1">Edit</a>
+                    <a href="/delete-project/{{@index}}" class="btn btn-dark ms-1">Delete</a>
                 </div>
                 {{/if}}
 
             </div>
+            {{/each}}
     </div>
       </div>
     <!--xMy Projectx-->
