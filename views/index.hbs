@@ -97,7 +97,7 @@
             <h2 class="fw-bold">MY PROJECT</h2>
             {{#if isLogin}}
             <div style="text-align: right; margin-right: 150px; margin-top:50px">
-            <a href="/project" class = "bg-dark rounded-3 m-5 p-2 text-light"style="text-decoration: none">Add Blog</a>
+            <a href="/project" class = "bg-dark rounded-3 m-5 p-2 text-light text-decoration-none">Add Project</a>
             </div>
             {{/if}}
         </div>
@@ -106,15 +106,21 @@
             <div class="mp-card">
                 <!--MPC = My Project Card-->
                 <div class="mpc-img">
-                    <img class="card-img-top rounded mx-auto d-block p-2" src="{{this.image}}" alt="">
+                    <img class="card-img-top rounded mx-auto d-block p-2" src="/public/assets/DWB.png" alt="">
                 </div>
                 <div class="mpc-title">
-                    <a class="text-decoration-none text-dark fw-bold text-center" href="/project-details/{{@index}}" >
+                    <a class="text-decoration-none text-dark fw-bold text-center" href="/project-details/{{this.id}}" >
                         <p class="card-title my-2"> {{this.name}} </p>
                     </a>
                 </div>
                 <div class="mpc-duration">
-                    <small>Durasi:{{this.duration}}</small>
+                    <small>Durasi:
+                  {{this.duration.years}}
+                  Tahun
+                  {{this.duration.months}}
+                  Bulan
+                  {{this.duration.days}}
+                  Hari.</small>
                 </div>
                 <div class="mpc-content fs-8">
                     {{this.description}}
@@ -122,13 +128,14 @@
                 <h6 class="card-subtitle text-muted text-end">1 hours ago</h6>
                 <div class="mpc-icons">
                   {{#each technologies}}
-                    <img src="{{this}}" />
+                    <img src="/public/assets/{{this}}.svg" alt = ""/>
                   {{/each}}
                 </div>
                 {{#if isLogin}}
                 <div class="mpc-mod my-3 btn-group d-flex">
-                    <a href="/edit-project/{{@index}}" class="btn btn-dark me-1">Edit</a>
-                    <a href="/delete-project/{{@index}}" class="btn btn-dark ms-1">Delete</a>
+                    <a href="/edit-project/{{this.id}}" class="btn btn-dark me-1" >Edit</a>
+                    <a href="/delete-project/{{this.id}}" class="btn btn-dark ms-1" type="submit"
+                       onclick="return confirm('Are you sure to Delete this Project?');">Delete</a>
                 </div>
                 {{/if}}
 

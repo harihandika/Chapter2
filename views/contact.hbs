@@ -30,25 +30,25 @@
 <!-- Navbar -->
 
         <div class="container2">
-            <form class="form-contact-me">
-                <div>
-                    <h1 >GET IN TOUCH</h1>
-                    <label for="input-name" class="label-input">Name</label>
+            <form class="form-contact-me col-4 mb-3">
+                <div class = "mb-3 fw-bold">
+                    <h1 class = "text-center my-3 fw-bold">GET IN TOUCH</h1>
+                    <label for="input-name" class="label-input fs-5">Name</label>
                     <input id="input-name" type="text" placeholder="Write your name"/>
                 </div>
                 
-                <div>
-                    <label for="input-email">Email</label>
+                <div class = "mb-3 fw-bold">
+                    <label for="input-email" class="label-input fs-5">Email</label>
                     <input id="input-email" type="email" placeholder="Write your email"/>
                 </div>
 
-                <div>
-                    <label for="input-phone">Phone Number</label>
-                    <input id="input-phone" type="tel"/>
+                <div class = "mb-3 fw-bold">
+                    <label for="input-phone" class="label-input fs-5">Phone Number</label>
+                    <input id="input-phone" type="tel" placeholder="Inserta your phone number"/>
                 </div>
 
-                <div>
-                    <label for="choose-subject">Subject</label>
+                <div class = "mb-3 fw-bold">
+                    <label for="choose-subject" class="label-input fs-5 mb-2">Subject</label>
                     <select id="choose-subject">
                         <option hidden>Choose Subject</option>
                         <option>Send Your Documents</option>
@@ -58,12 +58,12 @@
                     </select>
                 </div>
 
-                <div>
-                    <label for="input-message">Your Message</label>
+                <div class = "mb-3 fw-bold">
+                    <label for="input-message" class="label-input fs-5 mb-2">Your Message</label>
                     <textarea id="input-message" rows="8" placeholder="Write your message"></textarea>
                 </div>
 
-                <button typr="button" onclick="submitForm ()">Submit</button>
+                <button type="button" onclick="submitForm ()">Submit</button>
             </form>
         </div>
     </body>

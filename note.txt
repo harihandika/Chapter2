@@ -8,3 +8,17 @@
     })
  / "item" bebas bisa d ganti abc.. dsb, berfungsi untuk menyimpan parameter
  / "..." untuk mengeluarkan data
+
+day 10
+result.row[0], /agar datanya menjadi objek. Jika 
+result.row /maka datanya akan menjadi array of objek
+
+object destruction/destructuring assigment
+contoh :
+const title = data.title
+const content = data.conten
+const image = data.image
+ini sama saja dgn:
+const {title, content, image} = data
+referensi 	: sweetalert2
+		: unDraw

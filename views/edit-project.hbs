@@ -12,7 +12,7 @@
  <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid mx-5">
     <a class="navbar-brand me-4" href="/">
-      <img src="./public/assets/logo.png" alt="logo" />
+      <img src="/public/assets/logo.png" alt="logo" />
     </a>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
@@ -41,7 +41,7 @@
       <div class="mpi-form-container">
           <div class="mpi-form">
               <!--MP = My Project Input-->
-              <form onsubmit="addProject(event)" action = "/edit-project/{{index}}" method="post">
+              <form action = "/edit-project/{{id}}" method="post">
                   <div class="mpi-name">
                       <label for="inputProjectName">Project Name</label>
                       <input type="text" id="inputProjectName" name ='title'>
@@ -49,11 +49,11 @@
                   <div class="mpi-date">
                       <div class="date-start">
                           <label for="inputStartDate">Start Date</label>
-                          <input type="date" id="inputStartDate" name="starDate">
+                          <input type="date" id="inputStartDate" name="starDate" >
                       </div>
                       <div class="date-end">
                           <label for="inputEndDate">End Date</label>
-                          <input type="date" id="inputEndDate" name = "endDate">
+                          <input type="date" id="inputEndDate" name="endDate" >
                       </div>
                   </div>
                   <div class="mpi-desc">
@@ -65,28 +65,28 @@
                       <div class="mpi-check">
                           <div class="check-left">
                               <div>
-                                  <label for="checkHtml" class="check-label">Node Js
-                                  <input type="checkbox" id="checkHtml" name="checkHtml" value="/public/assets/graphql.svg">
+                                  <label for="nodejs" class="check-label">Node Js
+                                  <input type="checkbox" id="nodejs" name="nodejs" value="nodejs">
                                   <span class="checkmark"></span>
                               </label>
                               </div>
                               <div>
-                                  <label for="checkNode" class="check-label">React Js
-                                  <input type="checkbox" id="checkNode" name="checkNode" value="/public/assets/nextjs.svg">
+                                  <label for="reactjs" class="check-label">React Js
+                                  <input type="checkbox" id="reactjs" name="reactjs" value="reactjs">
                                   <span class="checkmark"></span>
                               </label>
                               </div>
                           </div>
                           <div class="check-right">
                               <div>
-                                  <label for="checkCss" class="check-label">Nest Js
-                                  <input type="checkbox" id="checkCss" name="checkCss" value="/public/assets/react.svg">
+                                  <label for="nextjs" class="check-label">Next Js
+                                  <input type="checkbox" id="nextjs" name="nextjs" value="nextjs">
                                   <span class="checkmark"></span>
                               </label>
                               </div>
                               <div>
-                                  <label for="checkReact" class="check-label">TypeScript
-                                  <input type="checkbox" id="checkReact" name="checkReact" value="/public/assets/redux.svg">
+                                  <label for="typescript" class="check-label">TypeScript
+                                  <input type="checkbox" id="typescript" name="typescript" value="typescript">
                                   <span class="checkmark"></span>
                               </label>
                               </div>
@@ -104,7 +104,8 @@
                       </div>
                   </div>
                   <div class="mpi-submit">
-                      <button type="submit">Submit</button>
+                      <button type="submit"
+                       onclick="return confirm('Are you sure to Edit this Project?');">Submit</button>
                   </div>
               </form>
           </div>

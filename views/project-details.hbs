@@ -50,30 +50,31 @@
                 <div class="bd-duration">
                     <div style="padding-left: 2px;">
                         <img src="/public/assets/calendar.svg ">
-                        <p class = "mt-3 ms-1" >{{data.starDate}} - {{data.endDate}}</p>
+                        <p class = "mt-3 ms-1" >{{data.star_date}} - {{data.end_date}}</p>
                     </div>
                     <div>
                         <img src="/public/assets/time.svg">
-                        <p class = "mt-3 ms-1" >{{data.duration}}</p>
+                        <p class = "mt-3 ms-1" > {{data.duration.years}} Tahun {{data.duration.months}} Bulan {{data.duration.days}}
+                  Hari.</p>
                     </div>
                 </div>
                 <div class="bd-tech">
                     <p>Technologies</p>
                     <div class="tech-body">
                         <div class="tech-html">
-                            <img src="{{data.checkHtml}}">
+                            <img src="/public/assets/{{data.nodejs}}.svg" alt = "">
                             <p class = "mt-3 ms-1">HTML</p>
                         </div>
                         <div class="tech-css">
-                            <img src="{{data.checkNode}}" class="ms-5">
+                            <img src="/public/assets/{{data.reactjs}}.svg" class="ms-4" alt ="">
                             <p class = "mt-3 ms-1">CSS</p>
                         </div>
                         <div class="tech-node">
-                            <img src="{{data.checkCss}} ">
+                            <img src="/public/assets/{{data.nextjs}}.svg" alt="">
                             <p class = "mt-3 ms-1">Node</p>
                         </div>
                         <div class="tech-react">
-                            <img src="{{data.checkReact}}" class="ms-5">
+                            <img src="/public/assets/{{data.typescript}}.svg" class="ms-4" alt ="">
                             <p class = "mt-3 ms-1">React</p>
                         </div>
                     </div>
@@ -83,7 +84,7 @@
 
         <div class="bd-content">
             <p>
-                {{data.content}}
+                {{data.description}}
             </p>
         </div>
     </div>
