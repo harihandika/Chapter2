@@ -19,11 +19,20 @@
         <li class="nav-item">
           <a class="nav-link fw-bold text-dark me-3" href="/">Home</a>
         </li>
+        {{#if isLogin}}
         <li class="nav-item me-5">
           <a href="/project" class="nav-link list-active text-dark">Add Project</a>
         </li>
+        {{/if}}
       </ul>
     </div>
+      {{#if isLogin}}
+      <a class="nav-link text-dark" href="#">Hello, {{user.name}}</a>
+      <a class="nav-link mx-3 text-dark" href="/logout">Logout</a>
+      {{else}}
+      <a class="nav-link mx-4 text-dark" href="/register">Register</a>
+      <a class="nav-link me-4 text-dark" href="/login">Login</a>
+      {{/if}}
     <div class="contact-me d-flex bg-dark rounded-3 px-2" >
       <a href="/contact" class="nav-link fw-normal text-light p-1"> Contact Me </a>
     </div>
@@ -43,22 +52,22 @@
               <!--MP = My Project Input-->
               <form action = "/edit-project/{{id}}" method="post">
                   <div class="mpi-name">
-                      <label for="inputProjectName">Project Name</label>
-                      <input type="text" id="inputProjectName" name ='title'>
+                      <label for="title">Project Name</label>
+                      <input type="text" id="title" name ='title' value="{{edit.name}}">
                   </div>
                   <div class="mpi-date">
                       <div class="date-start">
-                          <label for="inputStartDate">Start Date</label>
-                          <input type="date" id="inputStartDate" name="starDate" >
+                          <label for="starDate">Start Date</label>
+                          <input type="date" id="starDate" name="starDate" value="{{edit.star_date}}" >
                       </div>
                       <div class="date-end">
                           <label for="inputEndDate">End Date</label>
-                          <input type="date" id="inputEndDate" name="endDate" >
+                          <input type="date" id="inputEndDate" name="endDate" value="{{edit.end_date}}">
                       </div>
                   </div>
                   <div class="mpi-desc">
-                      <label for="inputDescription">Description</label>
-                      <textarea name="content" id="inputDescription"></textarea>
+                      <label for="content">Description</label>
+                      <textarea name="content" id="content">{{edit.description}}</textarea>
                   </div>
                   <div class="mpi-check-cont">
                       <label for="checkTitle">Technologies</label>
@@ -66,13 +75,17 @@
                           <div class="check-left">
                               <div>
                                   <label for="nodejs" class="check-label">Node Js
-                                  <input type="checkbox" id="nodejs" name="nodejs" value="nodejs">
+                                  <input type="checkbox" id="nodejs" name="nodejs" value="nodejs" {{#if
+                                  edit.nodejs}} checked {{/if}}>
                                   <span class="checkmark"></span>
                               </label>
                               </div>
                               <div>
                                   <label for="reactjs" class="check-label">React Js
-                                  <input type="checkbox" id="reactjs" name="reactjs" value="reactjs">
+                                  <input type="checkbox" id="reactjs" name="reactjs" value="reactjs" 
+                                  {{#if edit.reactjs}} 
+                                  checked
+                                  {{/if}}>
                                   <span class="checkmark"></span>
                               </label>
                               </div>
@@ -80,13 +93,15 @@
                           <div class="check-right">
                               <div>
                                   <label for="nextjs" class="check-label">Next Js
-                                  <input type="checkbox" id="nextjs" name="nextjs" value="nextjs">
+                                  <input type="checkbox" id="nextjs" name="nextjs" value="nextjs" {{#if
+                                    edit.nextjs}} checked {{/if}}>
                                   <span class="checkmark"></span>
                               </label>
                               </div>
                               <div>
                                   <label for="typescript" class="check-label">TypeScript
-                                  <input type="checkbox" id="typescript" name="typescript" value="typescript">
+                                  <input type="checkbox" id="typescript" name="typescript" value="typescript"{{#if
+                                    edit.typescript}} checked {{/if}}>
                                   <span class="checkmark"></span>
                               </label>
                               </div>

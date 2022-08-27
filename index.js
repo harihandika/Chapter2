@@ -1,14 +1,29 @@
-const express = require('express')
+const express = require('express');
+const db = require('./connection/db');
+const bcrypt = require('bcrypt');
+const session = require('express-session');
+const flash = require('express-flash');
 
-const app = express()
+const app = express();
+const port = 3000;
 
-const port = 3000
-
-const isLogin = true
-const db = require('./connection/db')
-app.set('view engine', 'hbs')
+app.set('view engine', 'hbs');
 app.use('/public', express.static(__dirname + '/public'));
 app.use(express.urlencoded({ extended: false })); 
+app.use(flash());
+app.use(session({
+    secret: 'bebas',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { 
+        maxAge: 3 * 60 * 60 * 1000 // 3JAM
+    }
+}));
+
+db.connect(function (err, _, done) {
+  if (err) throw err;
+  console.log("Database Connection Succes");
+});
 
 // Home
 app.get("/", (req, res) => {
@@ -21,19 +36,26 @@ app.get("/", (req, res) => {
             return {
                 ...item,
                 duration : getDateDifference(new Date(item.star_date), new Date(item.end_date)),
-                isLogin,
+                isLogin: req.session.isLogin,
             }
         })
         // console.log(projects)
-        res.render('index', {isLogin, projects});
+        res.render('index', {isLogin: req.session.isLogin, user: req.session.user, projects,});
     })
-
+    done();
   })
 });
   
 // Project
   app.get('/project', (req, res) => {
-    res.render('project');
+    if (!req.session.user) {
+      req.flash("danger", "Silahkan Login Terlebih Dahulu...!!!");
+      return res.redirect("/login");
+    }
+    res.render("project", {
+      isLogin: req.session.isLogin,
+      user: req.session.user,
+    });
   });
   
   app.post('/project', (req, res) => {
@@ -55,7 +77,14 @@ app.get("/", (req, res) => {
   
   // contact
   app.get('/contact', (req, res) => {
-    res.render('contact');
+    if (!req.session.user) {
+      req.flash("danger", "Silahkan Login Terlebih Dahulu...!!!");
+      return res.redirect("/login");
+    }
+    res.render("contact", {
+      isLogin: req.session.isLogin,
+      user: req.session.user,
+    });
   });
   
   // project-detail
@@ -78,6 +107,9 @@ app.get("/", (req, res) => {
           star_date : getFullTime(data.star_date),
           end_date : getFullTime(data.end_date),
         }
+        data.isLogin = req.session.isLogin,
+        data.user = req.session.user,
+        console.log(data)
         res.render('project-details', {data})
       })
     })
@@ -85,6 +117,10 @@ app.get("/", (req, res) => {
 
   // edit
   app.get('/edit-project/:id', (req, res) => {
+    if (!req.session.user) {
+      req.flash("danger", "Silahkan Login Terlebih Dahulu...!!!");
+      return res.redirect("/login");
+    }
     let {id} = req.params;
     db.connect(function (err, client, done) {
       if (err) throw err;
@@ -93,12 +129,33 @@ app.get("/", (req, res) => {
   
       client.query(query, function (err, result) {
         if (err) throw err;
-        // console.log(result.rows[0]);
+        console.log(result.rows[0]);
         let edit = result.rows[0]; //data ditampung dalam variable edit
-        edit.star_date = new Date(edit.star_date); // konversi tanggal supaya bisa tampil di halaman edit
-        edit.end_date = new Date(edit.end_date); //sama kaya yang diatas cuma inimah tanggal akhir
-  
-        res.render("edit-project", { isLogin: isLogin, edit, id });//nanti cek id
+        edit.star_date = changeTime(edit.star_date); // konversi tanggal supaya bisa tampil di halaman edit
+        edit.end_date = changeTime(edit.end_date); //sama kaya yang diatas cuma inimah tanggal akhir
+        if(edit.technologies[0] == 'undefined') {
+          edit.nodejs = false
+        }else {
+          edit.nodejs = true
+        }
+        if(edit.technologies[1] == 'undefined') {
+          edit.reactjs = false
+        }else {
+          edit.reactjs = true
+        }
+        if(edit.technologies[2] == 'undefined') {
+          edit.nextjs = false
+        }else {
+          edit.nextjs = true
+        }
+        if(edit.technologies[3] == 'undefined') {
+          edit.typescript = false
+        }else {
+          edit.typescript = true
+        }
+        // console.log(edit)
+        res.render("edit-project", { isLogin: req.session.isLogin, user: req.session.user,
+        edit, id });//nanti cek id
     })
   })
 });
@@ -114,7 +171,7 @@ app.post('/edit-project/:id', (req, res) =>{
 
     client.query(query, (err, result) => {
       if (err) throw err;
-
+      console.log(req.body)
       res.redirect("/");
     });
     done();
@@ -123,8 +180,11 @@ app.post('/edit-project/:id', (req, res) =>{
 
 // delete
 app.get("/delete-project/:id", (req, res) => {
-  const id = req.params.id; //mengambil data parameter
-
+  if (!req.session.user) {
+    req.flash("danger", "Silahkan Login Terlebih Dahulu...!!!");
+    return res.redirect("/login");
+  }
+  const {id} = req.params; //mengambil data parameter
   db.connect((err, client, done) => {
     if (err) throw err;
     const query = `DELETE FROM tb_projects WHERE id=${id};`; //query menghapus data berdasar
@@ -136,21 +196,105 @@ app.get("/delete-project/:id", (req, res) => {
   });
 });
 
+//register
+app.get("/register", (req, res) =>  {
+  res.render("register");
+});
+
+app.post("/register", (req, res) => {
+  //method post supaya bisa memasukan ke -nya
+  // console.log(req.body);
+  const {name, email, password} = req.body; //menampung variable inputpassword 
+
+  const hashedpassword = bcrypt.hashSync(password, 10); // enkripsi password (10 saltRound = 10 hash/ second)
+
+  db.connect((err, client, done) => {
+    if (err) throw err;
+
+    const query = `SELECT * FROM tb_user WHERE email = '${email}'`; //check email exist in DB
+
+    client.query(query, (err, result) => {
+      if (err) throw err;
+
+      const data = result.rows;
+      // console.log(data);
+      if (data.length > 0) {
+        req.flash("danger", " Email has already exist..!");
+        return res.redirect("/register");
+      } else {
+        db.connect(function (err, client, done) {
+          if (err) throw err;
+
+          const query = `INSERT INTO tb_user(name,email,password)
+          VALUES ('${name}','${email}','${hashedpassword}')`;
+
+          client.query(query, function (err, result) {
+            if (err) throw err;
+
+            res.redirect("/login");
+          });
+        });
+      }
+    });
+  });
+});
+
+//login
+app.get("/login", (req, res) =>  {
+  res.render("login");
+});
+
+app.post("/login",  (req, res) => {
+  const {email,password} = req.body;
+
+  db.connect( (err, client, done) => {
+    if (err) throw err;
+
+    const query = `SELECT * FROM tb_user WHERE email = '${email}'`; //check email exist in DB
+
+    client.query(query,  (err, result) => {
+      if (err) throw err;
+
+      const data = result.rows;
+
+      if (data.length == 0) {
+        //pengecekan apabila email belum terdaftar
+        req.flash("danger", " Email not Found..! Register Please!!..");
+        return res.redirect("/login");
+      }
+      const isMatch = bcrypt.compareSync(password, data[0].password); //pencocokan password antara input password dengan hasil pencarian db
+      // console.log(isMatch);
+      if (isMatch == false) {
+        req.flash("danger", "Sorry...!! Password not Match..!");
+        return res.redirect("/login");
+      }
+      //memasukkan data ke session
+      req.session.isLogin = true;
+      req.session.user = {
+        //mengetahui siapa yang sedang login
+        id: data[0].id,
+        email: data[0].email,
+        name: data[0].name,
+      };
+      console.log(data)
+      req.flash("success", "Login succes");
+      res.redirect("/");
+    });
+    done();
+  });
+});
+
+app.get("/logout", (req, res) =>  {
+  req.session.destroy(); //sesion akan dihapus
+  res.redirect("/login");
+});
+
 function getFullTime(time){
 
   let month = ["Januari", "Febuari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "Nopember", "Desember"]
   let date = time.getDate()
   let monthIndex = time.getMonth()
   let year = time.getFullYear()
-
-  // let hours = time.getHours()
-  // let minutes = time.getMinutes()
-
-  // if(hours < 10){
-  //     hours = "0" + hours
-  // }else if(minutes < 10){
-  //     minutes = "0" + minutes
-  // }
   let fullTime = `${date} ${month[monthIndex]} ${year} `
   return fullTime
 }
@@ -186,6 +330,28 @@ function getDateDifference(startDate, endDate) {
       : daysOfMonth[(12 + endMonth - 1) % 12] - startDay + endDay;
 
   return { years: years, months: months, days: days };
+}
+
+function changeTime(waktu) {
+  //memunculkan start date dan end date di form edit/update
+  let newTime = new Date(waktu);
+  const date = newTime.getDate();
+  const monthIndex = newTime.getMonth() + 1;
+  const year = newTime.getFullYear();
+
+  if (monthIndex < 10) {
+    monthformat = "0" + monthIndex;
+  } else {
+    monthformat = monthIndex;
+  }
+
+  if (date < 10) {
+    dateformat = "0" + date;
+  } else {
+    dateformat = date;
+  }
+  const fullTime = `${year}-${monthformat}-${dateformat}`;
+  return fullTime;
 }
 
   app.listen(port, () => console.log(`Server running on port ${port}`))
