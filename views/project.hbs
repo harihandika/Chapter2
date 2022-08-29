@@ -19,11 +19,9 @@
         <li class="nav-item">
           <a class="nav-link fw-bold text-dark me-3" href="/">Home</a>
         </li>
-        {{#if isLogin}}
         <li class="nav-item me-5">
           <a href="/project" class="nav-link list-active text-dark">Add Project</a>
         </li>
-        {{/if}}
       </ul>
     </div>
       {{#if isLogin}}
@@ -50,7 +48,7 @@
       <div class="mpi-form-container">
           <div class="mpi-form">
               <!--MP = My Project Input-->
-              <form action = "/project" method="post">
+              <form action = "/project" method="post"  enctype="multipart/form-data">
                   <div class="mpi-name">
                       <label for="inputProjectName">Project Name</label>
                       <input type="text" id="inputProjectName" name ='title'>
@@ -106,9 +104,9 @@
                       <label>Upload Image</label>
                       <div class="mpi-image">
                           <label for="inputImage">
-                  <div class="mpi-choose">Choose</div>
-                  <div class="mpi-attach"><i class="fa-solid fa-paperclip"></i></div>
-                  </label>
+                          <div class="mpi-choose">Choose</div>
+                          <div class="mpi-attach"><i class="fa-solid fa-paperclip"></i></div>
+                          </label>
                           <input type="file" id="inputImage" name = "image" hidden />
                       </div>
                   </div>

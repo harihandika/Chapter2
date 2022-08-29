@@ -53,13 +53,25 @@
             {{#if messages.danger}}
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 {{messages.danger}}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {{/if}}
+            {{#if messages.warning}}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{messages.warning}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {{/if}}
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="text" class="form-control" id="email" name="email" />
             </div>
+           {{#if messages.dangerpass}}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{messages.dangerpass}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {{/if}}
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password" />

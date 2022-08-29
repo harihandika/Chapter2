@@ -39,6 +39,12 @@
 </nav>
 <!-- Navbar -->
 
+    {{#if messages.successlogin}}
+    <div class="text-center alert alert-success alert-dismissible fade show" role="alert">
+    {{messages.successlogin}} Welcome <b>{{user.name}}</b>...
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {{/if}}
     {{#if messages.success}}
     <div class="text-center alert alert-success alert-dismissible fade show" role="alert">
     {{messages.success}}
@@ -122,7 +128,7 @@
             <div class="mp-card">
                 <!--MPC = My Project Card-->
                 <div class="mpc-img">
-                    <img class="card-img-top rounded mx-auto d-block p-2" src="/public/assets/DWB.png" alt="">
+                    <img class="card-img-top rounded mx-auto d-block p-2" src="uploads/{{this.image}}" alt="">
                 </div>
                 <div class="mpc-title">
                     <a class="text-decoration-none text-dark fw-bold text-center" href="/project-details/{{this.id}}" >
@@ -141,7 +147,8 @@
                 <div class="mpc-content fs-8">
                     {{this.description}}
                 </div>
-                <h6 class="card-subtitle text-muted text-end">1 hours ago</h6>
+                <p class="text-end text-black-50 mb-1">author : <span class="text-black">{{this.author}}</span></p>
+                <h6 class="card-subtitle text-muted text-end">{{this.post_at}}</h6>
                 <div class="mpc-icons">
                   {{#each technologies}}
                     <img src="/public/assets/{{this}}.svg" alt = ""/>

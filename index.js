@@ -3,12 +3,13 @@ const db = require('./connection/db');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const flash = require('express-flash');
-
+const upload = require("./middlewares/fileUpload");
 const app = express();
 const port = 3000;
 
 app.set('view engine', 'hbs');
 app.use('/public', express.static(__dirname + '/public'));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(express.urlencoded({ extended: false })); 
 app.use(flash());
 app.use(session({
@@ -29,7 +30,23 @@ db.connect(function (err, _, done) {
 app.get("/", (req, res) => {
   db.connect((err, client, done) => {
     if (err) throw err
-    client.query('SELECT * FROM tb_projects ORDER BY id DESC', (err, result) => {
+    let query = "";
+    
+    if (req.session.isLogin == true) {
+      query = `SELECT tb_projects.id, tb_user.name as author,tb_projects.name, star_date, end_date, description, technologies, image, post_at
+      FROM tb_projects 
+      LEFT JOIN tb_user 
+      ON tb_projects.author_id = tb_user.id 
+      WHERE tb_projects.author_id = '${req.session.user.id}' 
+      ORDER BY tb_projects.id DESC`;
+    } else {
+      query = `SELECT tb_projects.id, tb_user.name as author,tb_projects.name, star_date, end_date, description, technologies, image, post_at
+      FROM tb_projects 
+      LEFT JOIN tb_user 
+      ON tb_projects.author_id = tb_user.id 
+      ORDER BY tb_projects.id DESC`;
+    }
+    client.query(query, (err, result) => {
         if (err) throw err 
         let data = result.rows;
         let projects = data.map((item) => {
@@ -37,6 +54,7 @@ app.get("/", (req, res) => {
                 ...item,
                 duration : getDateDifference(new Date(item.star_date), new Date(item.end_date)),
                 isLogin: req.session.isLogin,
+                post_at: getDistanceTime(item.post_at),
             }
         })
         // console.log(projects)
@@ -58,17 +76,19 @@ app.get("/", (req, res) => {
     });
   });
   
-  app.post('/project', (req, res) => {
-    const { title, starDate, endDate, content, technologies, image, nodejs,reactjs, nextjs, typescript } = req.body
+  app.post('/project', upload.single("image"), (req, res) => {
+    const { title, starDate, endDate, content, nodejs,reactjs, nextjs, typescript } = req.body
+    const authorId = req.session.user.id;
+    const image = req.file.filename;
     db.connect((err, client, done) => {
       if (err) throw err;
   
-      const query = `INSERT INTO tb_projects(name, star_date, end_date, description, technologies, image)
-      VALUES ( '${title}','${starDate}', '${endDate}', '${content}',ARRAY['${nodejs}','${reactjs}','${nextjs}','${typescript}'], '${image}');`;
+      const query = `INSERT INTO tb_projects(name, star_date, end_date, description, technologies, image, author_id)
+      VALUES ( '${title}','${starDate}', '${endDate}', '${content}',ARRAY['${nodejs}','${reactjs}','${nextjs}','${typescript}'], '${image}', ${authorId}); `;
   
       client.query(query, (err, result) => {
         if (err) throw err;
-  
+        req.flash("successs", "Project Added ");
         res.redirect("/");
       });
       done();
@@ -106,6 +126,7 @@ app.get("/", (req, res) => {
           typescript : data.technologies[3],
           star_date : getFullTime(data.star_date),
           end_date : getFullTime(data.end_date),
+          author : data.author,
         }
         data.isLogin = req.session.isLogin,
         data.user = req.session.user,
@@ -129,7 +150,7 @@ app.get("/", (req, res) => {
   
       client.query(query, function (err, result) {
         if (err) throw err;
-        console.log(result.rows[0]);
+        // console.log(result.rows[0]);
         let edit = result.rows[0]; //data ditampung dalam variable edit
         edit.star_date = changeTime(edit.star_date); // konversi tanggal supaya bisa tampil di halaman edit
         edit.end_date = changeTime(edit.end_date); //sama kaya yang diatas cuma inimah tanggal akhir
@@ -153,25 +174,28 @@ app.get("/", (req, res) => {
         }else {
           edit.typescript = true
         }
-        // console.log(edit)
+        console.log(edit)
         res.render("edit-project", { isLogin: req.session.isLogin, user: req.session.user,
-        edit, id });//nanti cek id
+        edit, id: id });//nanti cek id
     })
   })
 });
 
-app.post('/edit-project/:id', (req, res) =>{
-  const { title, starDate, endDate, content, technologies, image, nodejs,reactjs, nextjs, typescript } = req.body;
+app.post('/edit-project/:id', upload.single("image"), (req, res) =>{
+  const { title, starDate, endDate, content,nodejs,reactjs, nextjs, typescript } = req.body;
+  // const authorId = req.session.user.id;
+  const image = req.file.filename;
   db.connect((err, client, done) => {
     let {id} = req.params;
     if (err) throw err;
 
-    const query = `UPDATE tb_projects SET  name= '${title}', star_date='${starDate}', end_date='${endDate}', description='${content}', technologies=ARRAY['${nodejs}','${reactjs}','${nextjs}','${typescript}'], image='${image}' 
+    const query = `UPDATE tb_projects SET  name= '${title}', star_date='${starDate}', end_date='${endDate}', description='${content}', technologies=ARRAY['${nodejs}','${reactjs}','${nextjs}','${typescript}'], image='${image}'
     WHERE id=${id};`;
 
     client.query(query, (err, result) => {
       if (err) throw err;
       console.log(req.body)
+      req.flash("updated", "Data Updated");
       res.redirect("/");
     });
     done();
@@ -202,12 +226,20 @@ app.get("/register", (req, res) =>  {
 });
 
 app.post("/register", (req, res) => {
-  //method post supaya bisa memasukan ke -nya
-  // console.log(req.body);
   const {name, email, password} = req.body; //menampung variable inputpassword 
-
   const hashedpassword = bcrypt.hashSync(password, 10); // enkripsi password (10 saltRound = 10 hash/ second)
-
+  if (name == "") {
+    req.flash("warning", "Please input name");
+    return res.redirect("/register");
+  }
+  if (email == "") {
+    req.flash("warning", "Please input email");
+    return res.redirect("/register");
+  }
+  if (password == "") {
+    req.flash("warning", "Please input Password");
+    return res.redirect("/register");
+  }
   db.connect((err, client, done) => {
     if (err) throw err;
 
@@ -246,7 +278,14 @@ app.get("/login", (req, res) =>  {
 
 app.post("/login",  (req, res) => {
   const {email,password} = req.body;
-
+  if (email == "") {
+    req.flash("warning", "Please input Email");
+    return res.redirect("/login");
+  }
+  if (password == "") {
+    req.flash("warning", "Please input Password");
+    return res.redirect("/login");
+  }
   db.connect( (err, client, done) => {
     if (err) throw err;
 
@@ -277,7 +316,7 @@ app.post("/login",  (req, res) => {
         name: data[0].name,
       };
       console.log(data)
-      req.flash("success", "Login succes");
+      req.flash("successlogin", "Login succes");
       res.redirect("/");
     });
     done();
@@ -352,6 +391,35 @@ function changeTime(waktu) {
   }
   const fullTime = `${year}-${monthformat}-${dateformat}`;
   return fullTime;
+}
+
+function getDistanceTime(waktu) {
+  //memunculkan postingnya kapan
+  let timeNow = new Date();
+  let timePost = waktu;
+  let distance = timeNow - timePost; // hasilnya milisecond
+  // console.log(distance);
+
+  let milisecond = 1000; // 1 detik 1000 milisecond
+  let secondInHours = 3600; // 1 jam sama dengan 3600 detik
+  let hoursInDay = 24; // 1 hari 24 jam
+
+  let distanceDay = Math.floor(
+    distance / (milisecond * secondInHours * hoursInDay)
+  );
+  let distanceHours = Math.floor(distance / (milisecond * 60 * 60));
+  let distanceMinutes = Math.floor(distance / (milisecond * 60));
+  let distanceSeconds = Math.floor(distance / milisecond);
+
+  if (distanceDay > 0) {
+    return `${distanceDay} days ago`;
+  } else if (distanceHours > 0) {
+    return `${distanceHours} hours ago`;
+  } else if (distanceMinutes > 0) {
+    return `${distanceMinutes} minutes ago`;
+  } else {
+    return `${distanceSeconds} seconds ago`;
+  }
 }
 
   app.listen(port, () => console.log(`Server running on port ${port}`))

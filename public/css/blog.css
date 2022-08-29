@@ -215,10 +215,10 @@
 }
 
 .mp-card {
-    width: 320px;
-    height: 540px;
-    max-width: 280px;
-    max-height: 500px;
+    width: 280px;
+    height: 530px;
+    /* max-width: 280px;
+    max-height: 500px; */
     padding: 10px 15px;
     border: none;
     border-radius: 10px;
